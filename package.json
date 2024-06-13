@@ -2,6 +2,7 @@
   "name": "@balena/update-bundle",
   "version": "0.0.1",
   "description": "Balena Update Bundle SDK",
+  "private": true,
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
