@@ -1,0 +1,26 @@
+- commits:
+    - subject: Enable Flowzone
+      hash: 4a31c0e2afa12dccedb63266812617fab9b9150a
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+    - subject: Initial commit
+      hash: 6187a06bb0710e0526032f5f01fb83b51695f4b8
+      body: >
+        This contains the initial implementation of creating and reading an
+        update bundle.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 0.1.0
+  title: ""
+  date: 2024-06-13T08:32:09.174Z
