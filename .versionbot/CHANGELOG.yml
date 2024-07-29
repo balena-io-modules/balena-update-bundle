@@ -1,4 +1,19 @@
 - commits:
+    - subject: Set declarationMap in tsconfig.json
+      hash: 6f52a6d6b85627f10cc960ecc369e1b36d0073c3
+      body: |
+        This allows VS Code to navigate between .ts files easier.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 0.2.1
+  title: ""
+  date: 2024-07-29T11:25:20.522Z
+- commits:
     - subject: Reorganize code in separate modules and README
       hash: 960225b72b53ff25c3559632bdba3cd66d6c204e
       body: ""
