@@ -4,6 +4,8 @@ import { docker } from '@balena/resource-bundle';
 
 export const BALENA_UPDATE_TYPE = 'io.balena.update@1';
 
+export import BasicAuth = docker.BasicAuth;
+export import BearerAuth = docker.BearerAuth;
 export import Credentials = docker.Credentials;
 export import ImageBlob = docker.ImageBlob;
 export import ImageManifest = docker.ImageManifest;
