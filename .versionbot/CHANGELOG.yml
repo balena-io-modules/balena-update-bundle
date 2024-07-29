@@ -1,4 +1,20 @@
 - commits:
+    - subject: Add sign arguments to `create` and `read`
+      hash: f9bdbd6f26b89d8a8e6643d52cc7eb83493feeac
+      body: >
+        This mirrors the `create` and `read` API of `@balena/resource-bundle` by
+        introducing the same arguments for signing the resource bundle.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 0.2.3
+  title: ""
+  date: 2024-07-29T12:09:49.766Z
+- commits:
     - subject: Reexport auth interfaces
       hash: bb51604a495c60ba6f4b6aadec6480de1300bee5
       body: >
