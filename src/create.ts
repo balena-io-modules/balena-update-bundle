@@ -1,3 +1,4 @@
+import type { SignOptions } from '@balena/resource-bundle';
 import {
 	docker,
 	create as createResourceBundle,
@@ -14,6 +15,7 @@ export async function create(
 	state: any,
 	images: ImageDescriptor[],
 	creds?: Credentials,
+	sign?: SignOptions,
 ) {
 	const token = await authenticate(images, creds);
 
@@ -26,6 +28,7 @@ export async function create(
 			images: res.images,
 		},
 		resources: res.blobs,
+		sign,
 	});
 }
 

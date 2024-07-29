@@ -7,10 +7,12 @@ import { BALENA_UPDATE_TYPE } from './types';
 
 export async function read(
 	input: stream.Readable,
+	publicKey?: string,
 ): Promise<ReadableUpdateBundle> {
 	const update = await readResourceBundle<UpdateBundleManifest>(
 		input,
 		BALENA_UPDATE_TYPE,
+		publicKey,
 	);
 
 	const { state, images } = update.manifest;
