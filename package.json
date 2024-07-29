@@ -1,6 +1,6 @@
 {
   "name": "@balena/update-bundle",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Balena Update Bundle SDK",
   "private": true,
   "main": "dist/index.js",
@@ -47,6 +47,6 @@
     "@balena/resource-bundle": "^0.4.0"
   },
   "versionist": {
-    "publishedAt": "2024-07-29T11:25:20.567Z"
+    "publishedAt": "2024-07-29T11:56:20.002Z"
   }
 }

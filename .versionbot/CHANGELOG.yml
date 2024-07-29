@@ -1,4 +1,20 @@
 - commits:
+    - subject: Reexport auth interfaces
+      hash: bb51604a495c60ba6f4b6aadec6480de1300bee5
+      body: >
+        Reexports registry authentication interfaces from
+        `@balena/resource-bundle`.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 0.2.2
+  title: ""
+  date: 2024-07-29T11:56:19.948Z
+- commits:
     - subject: Set declarationMap in tsconfig.json
       hash: 6f52a6d6b85627f10cc960ecc369e1b36d0073c3
       body: |
