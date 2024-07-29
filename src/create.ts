@@ -42,12 +42,6 @@ async function authenticate(
 		return;
 	}
 
-	if (creds == null) {
-		throw new Error(
-			'Docker registry requires authentication, but credentials were not provided',
-		);
-	}
-
 	const [auth, scope] = authResult;
 
 	return await docker.authenticate(auth, scope, creds);
