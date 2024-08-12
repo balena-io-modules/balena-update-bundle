@@ -1,40 +1,67 @@
-import type { SignOptions } from '@balena/resource-bundle';
 import {
 	docker,
 	create as createResourceBundle,
 } from '@balena/resource-bundle';
 
+import { fetchDevicesTargetStates, fetchFleetTargetState } from './state';
+
 import type {
 	ImageDescriptor,
-	Credentials,
+	UpdateCreateOptions,
 	UpdateBundleManifest,
+	FetchTargetStateResult,
+	BearerAuth,
 } from './types';
 import { BALENA_UPDATE_TYPE } from './types';
 
-export async function create(
-	state: any,
-	images: ImageDescriptor[],
-	creds?: Credentials,
-	sign?: SignOptions,
-) {
-	const token = await authenticate(images, creds);
+export async function create(options: UpdateCreateOptions) {
+	let targetStateRes: FetchTargetStateResult;
+	if (options.type === 'Devices') {
+		targetStateRes = await fetchDevicesTargetStates(
+			options.deviceUuids,
+			options.auth.token,
+		);
+	} else {
+		targetStateRes = await fetchFleetTargetState(
+			options.appUuid,
+			options.auth.token,
+			options.releaseUuid,
+		);
+	}
 
-	const res = await docker.fetchImages(images, token);
+	const registryToken = await authenticate(targetStateRes.images, options.auth);
+
+	const imagesRes = await docker.fetchImages(
+		targetStateRes.images,
+		registryToken,
+	);
+
+	let manifest: UpdateBundleManifest;
+	if (targetStateRes.type === 'Devices') {
+		manifest = {
+			type: 'Devices',
+			config: targetStateRes.config,
+			images: imagesRes.images,
+		};
+	} else {
+		manifest = {
+			type: 'Fleet',
+			config: targetStateRes.config,
+			images: imagesRes.images,
+		};
+	}
 
 	return createResourceBundle<UpdateBundleManifest>({
 		type: BALENA_UPDATE_TYPE,
-		manifest: {
-			state,
-			images: res.images,
-		},
-		resources: res.blobs,
-		sign,
+		manifest: manifest,
+		resources: imagesRes.blobs,
+		sign: options.sign,
 	});
 }
 
 async function authenticate(
 	images: ImageDescriptor[],
-	creds?: Credentials,
+	credentials: BearerAuth,
 ): Promise<string | undefined> {
 	const authResult = await docker.discoverAuthenticate(images);
 
@@ -44,5 +71,5 @@ async function authenticate(
 
 	const [auth, scope] = authResult;
 
-	return await docker.authenticate(auth, scope, creds);
+	return await docker.authenticate(auth, scope, credentials);
 }

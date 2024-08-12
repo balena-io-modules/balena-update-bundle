@@ -15,9 +15,9 @@ export async function read(
 		publicKey,
 	);
 
-	const { state, images } = update.manifest;
+	const manifest = update.manifest;
 
-	const archive = new docker.DockerArchive(images);
+	const archive = new docker.DockerArchive(manifest.images);
 
 	for (const resource of update.resources) {
 		if (archive.containsImageBlob(resource)) {
@@ -27,5 +27,5 @@ export async function read(
 		throw new Error(`Found unexpected resource in bundle: ${resource.id}`);
 	}
 
-	return { state, images, archive: archive.finalize() };
+	return { manifest, archive: archive.finalize() };
 }
