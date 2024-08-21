@@ -1,4 +1,23 @@
 - commits:
+    - subject: Fetching devices and fleet target state
+      hash: 9f0b36ea4d185b6bf094a15689e8eb2cca3df8d5
+      body: >
+        Added ability to fetch target state for an array of balena devices or a
+        specific fleet target state.
+
+
+        The create API is improved now, so this is considered a breaking change.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 0.3.0
+  title: ""
+  date: 2024-08-21T15:40:16.122Z
+- commits:
     - subject: Do not require credentials on registry auth
       hash: e800e80fbc580fc3342dcbef1ef9d49d89fb1d86
       body: >
