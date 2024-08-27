@@ -1,31 +1,40 @@
 import type * as stream from 'node:stream';
 
-import { docker, read as readResourceBundle } from '@balena/resource-bundle';
+import { docker, open } from '@balena/resource-bundle';
 
-import type { ReadableUpdateBundle, UpdateBundleManifest } from './types';
-import { BALENA_UPDATE_TYPE } from './types';
+import type { UpdateBundleManifest } from './types';
+import { BALENA_UPDATE_TYPE, REGISTRY_IMAGES_ID } from './types';
+
+export interface ReadableUpdateBundle {
+	readonly manifest: UpdateBundleManifest;
+	readonly archive: stream.Readable;
+}
 
 export async function read(
 	input: stream.Readable,
 	publicKey?: string,
 ): Promise<ReadableUpdateBundle> {
-	const update = await readResourceBundle<UpdateBundleManifest>(
-		input,
-		BALENA_UPDATE_TYPE,
+	const update = await open<UpdateBundleManifest>(input, BALENA_UPDATE_TYPE, {
 		publicKey,
-	);
+	});
 
 	const manifest = update.manifest;
 
-	const archive = new docker.DockerArchive(manifest.images);
-
-	for (const resource of update.resources) {
-		if (archive.containsImageBlob(resource)) {
-			archive.addImageBlob(resource);
-			continue;
+	const descriptor = update.resources.find((desc) => {
+		if (desc.id !== REGISTRY_IMAGES_ID) {
+			throw new Error(`Unexpected descriptor ID found in bundle: ${desc.id}`);
 		}
-		throw new Error(`Found unexpected resource in bundle: ${resource.id}`);
+
+		return desc;
+	});
+
+	if (descriptor == null) {
+		throw new Error('Registry images not found in bundle');
 	}
 
-	return { manifest, archive: archive.finalize() };
+	const resource = update.readMultipart<docker.ImageSetManifest>(descriptor);
+	const imageSet = docker.ImageSet.fromBundle(resource);
+	const archive = imageSet.pack();
+
+	return { manifest, archive };
 }
