@@ -1,4 +1,18 @@
 - commits:
+    - subject: Accommodate @balena/resource-bundle multipart resource API
+      hash: 8cb2905a36af9b9b97d816cf873d065f29d04698
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 0.4.0
+  title: ""
+  date: 2024-08-27T14:41:12.048Z
+- commits:
     - subject: Fetching devices and fleet target state
       hash: 9f0b36ea4d185b6bf094a15689e8eb2cca3df8d5
       body: >
