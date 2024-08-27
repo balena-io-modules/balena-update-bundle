@@ -44,7 +44,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@balena/resource-bundle": "^0.4.0"
+    "@balena/resource-bundle": "^0.8.1"
   },
   "versionist": {
     "publishedAt": "2024-08-21T15:40:16.168Z"

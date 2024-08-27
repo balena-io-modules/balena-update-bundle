@@ -1,10 +1,8 @@
-import { docker } from '@balena/resource-bundle';
-
 import type {
-	ImageDescriptor,
-	DeviceConfig,
-	FleetConfig,
-	FetchTargetStateResult,
+	DeviceTargetState,
+	DeviceManifest,
+	FleetTargetState,
+	FleetManifest,
 } from './types';
 
 const BALENA_API = 'https://api.balena-cloud.com';
@@ -42,14 +40,14 @@ export interface DeviceStateV3 {
 
 export function listImagesFromTargetState(
 	targetState: DeviceStateV3,
-): ImageDescriptor[] {
+): string[] {
 	const images = [];
 
 	for (const device of Object.values(targetState)) {
 		for (const app of Object.values(device.apps)) {
 			for (const release of Object.values(app.releases)) {
 				for (const service of Object.values(release.services)) {
-					images.push(docker.parseImageName(service.image));
+					images.push(service.image);
 				}
 			}
 		}
@@ -58,35 +56,22 @@ export function listImagesFromTargetState(
 	return images;
 }
 
-function addImage(
-	image: ImageDescriptor,
-	deduplicatedImages: ImageDescriptor[],
-) {
-	for (const existingImage of deduplicatedImages) {
-		if (
-			image.reference === existingImage.reference &&
-			image.registry === existingImage.registry &&
-			image.repository === existingImage.repository
-		) {
-			return;
-		}
-	}
-
-	deduplicatedImages.push(image);
-}
-
 export async function fetchDevicesTargetStates(
 	deviceUUIDs: string[],
 	token: string,
-): Promise<FetchTargetStateResult> {
-	const config: DeviceConfig[] = [];
-	const deduplicatedImages: ImageDescriptor[] = [];
+): Promise<[DeviceManifest, string[]]> {
+	const config: DeviceTargetState[] = [];
+	const deduplicatedImages: string[] = [];
 
 	for (const uuid of deviceUUIDs) {
 		const state = await fetchSingleDeviceTargetState(uuid, token);
 
 		for (const image of listImagesFromTargetState(state)) {
-			addImage(image, deduplicatedImages);
+			if (deduplicatedImages.includes(image)) {
+				continue;
+			}
+
+			deduplicatedImages.push(image);
 		}
 
 		config.push({
@@ -96,11 +81,13 @@ export async function fetchDevicesTargetStates(
 		});
 	}
 
-	return {
-		type: 'Devices',
-		config,
-		images: deduplicatedImages,
-	};
+	return [
+		{
+			type: 'Device',
+			config,
+		},
+		deduplicatedImages,
+	];
 }
 
 async function fetchSingleDeviceTargetState(
@@ -125,7 +112,7 @@ export async function fetchFleetTargetState(
 	appUuid: string,
 	token: string,
 	releaseUuid?: string,
-): Promise<FetchTargetStateResult> {
+): Promise<[FleetManifest, string[]]> {
 	let releaseParam: string;
 	if (releaseUuid == null) {
 		releaseParam = '';
@@ -148,7 +135,7 @@ export async function fetchFleetTargetState(
 
 	const state = await response.json();
 
-	const config: FleetConfig = {
+	const config: FleetTargetState = {
 		appUuid,
 		releaseUuid,
 		version: '3',
@@ -157,9 +144,11 @@ export async function fetchFleetTargetState(
 
 	const images = listImagesFromTargetState(state);
 
-	return {
-		type: 'Fleet',
-		config,
+	return [
+		{
+			type: 'Fleet',
+			config,
+		},
 		images,
-	};
+	];
 }
