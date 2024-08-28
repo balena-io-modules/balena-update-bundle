@@ -1,4 +1,19 @@
 - commits:
+    - subject: Test for creating and reading empty update bundle
+      hash: e7477482f257678215ad278430565ae40a8591a8
+      body: |
+        Also extract create functionality in separate functions to allow that.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 0.5.0
+  title: ""
+  date: 2024-08-28T11:32:21.168Z
+- commits:
     - subject: Accommodate @balena/resource-bundle multipart resource API
       hash: 8cb2905a36af9b9b97d816cf873d065f29d04698
       body: ""
