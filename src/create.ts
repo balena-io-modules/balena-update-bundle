@@ -1,7 +1,7 @@
-import {
-	docker,
-	create as createResourceBundle,
-} from '@balena/resource-bundle';
+import type * as stream from 'node:stream';
+
+import * as bundle from '@balena/resource-bundle';
+import { docker } from '@balena/resource-bundle';
 import type { SignOptions } from '@balena/resource-bundle';
 
 import { fetchDevicesTargetStates, fetchFleetTargetState } from './state';
@@ -27,45 +27,54 @@ export interface FleetCreateOptions extends BaseCreateOptions {
 
 export type CreateOptions = DeviceCreateOptions | FleetCreateOptions;
 
-export async function create(options: CreateOptions) {
-	let targetState;
-	let imageNames;
+export async function create(options: CreateOptions): Promise<stream.Readable> {
+	const [manifest, imageNames] = await fetchTargetState(options);
+
+	const [images, token] = await authenticate(imageNames, options.auth);
+
+	return await createUpdateBundle(manifest, images, token, options.sign);
+}
+
+async function fetchTargetState(
+	options: CreateOptions,
+): Promise<[UpdateBundleManifest, string[]]> {
 	if (options.type === 'Device') {
-		[targetState, imageNames] = await fetchDevicesTargetStates(
+		return await fetchDevicesTargetStates(
 			options.deviceUuids,
 			options.auth.token,
 		);
 	} else {
-		[targetState, imageNames] = await fetchFleetTargetState(
+		return await fetchFleetTargetState(
 			options.appUuid,
 			options.auth.token,
 			options.releaseUuid,
 		);
 	}
+}
 
+async function authenticate(
+	imageNames: string[],
+	credentials?: docker.BearerAuth,
+): Promise<[docker.ImageDescriptor[], string | undefined]> {
 	const { auth, images } = await docker.discoverAuthenticate(imageNames);
 
 	let registryToken = undefined;
 	if (auth != null) {
-		registryToken = await docker.authenticate(auth, options.auth);
+		registryToken = await docker.authenticate(auth, credentials);
 	}
 
-	const imageSet = await docker.ImageSet.fromImages(images, registryToken);
+	return [images, registryToken];
+}
 
-	let manifest: UpdateBundleManifest;
-	if (targetState.type === 'Device') {
-		manifest = {
-			type: 'Device',
-			config: targetState.config,
-		};
-	} else {
-		manifest = {
-			type: 'Fleet',
-			config: targetState.config,
-		};
-	}
+export async function createUpdateBundle(
+	manifest: UpdateBundleManifest,
+	images: docker.ImageDescriptor[],
+	token?: string,
+	sign?: SignOptions,
+): Promise<stream.Readable> {
+	const imageSet = await docker.ImageSet.fromImages(images, token);
 
-	return createResourceBundle<UpdateBundleManifest>(
+	return bundle.create<UpdateBundleManifest>(
 		{
 			type: BALENA_UPDATE_TYPE,
 			manifest,
@@ -77,7 +86,7 @@ export async function create(options: CreateOptions) {
 			],
 		},
 		{
-			sign: options.sign,
+			sign,
 		},
 	);
 }
