@@ -1,4 +1,19 @@
 - commits:
+    - subject: Publish package
+      hash: 4714621d7ab663783dd947c6bee6c5a6b2064152
+      body: |
+        This removes the `private` field from package.json
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 0.5.1
+  title: ""
+  date: 2024-10-08T11:17:02.466Z
+- commits:
     - subject: Test for creating and reading empty update bundle
       hash: e7477482f257678215ad278430565ae40a8591a8
       body: |
