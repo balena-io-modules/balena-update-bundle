@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update dependency flowzonify to v0.4.23
+      hash: b76975e060b55334615807c5ba2784b37aa69958
+      body: |
+        Update flowzonify from 0.0.0 to 0.4.23
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 0.5.3
+  title: ""
+  date: 2026-11-02T23:07:34.393Z
+- commits:
     - subject: "Add id-token: write permission for NPM OIDC publishing"
       hash: 7cba36cf9c02e19e6b56ad6486a203ec7b1fab6b
       body: ""
